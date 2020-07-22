@@ -1,4 +1,4 @@
-
+// update 2
 
 // motor Driver 1
 int PWM1motor1 = 2;
@@ -124,7 +124,7 @@ void loop()
     Serial.println("Stop");
     STOP();
     delay(500);
-    
+
     if (distanceb1 > 50 || distanceb2 > 50 || distanceb3 > 50)
     {
       Serial.println("back");
@@ -132,7 +132,7 @@ void loop()
       delay(2000);
       if ( distancef1 > 50 || distancef2 > 50 || distancef3 > 50 )
       {
-        Serial.println("LEFT");
+        Serial.println("Left");
         LEFT();
 
         delay(2000);
