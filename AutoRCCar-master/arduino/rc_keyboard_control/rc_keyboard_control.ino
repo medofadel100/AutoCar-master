@@ -17,36 +17,50 @@ int RPWMmotor2 = 8;
 //UltraSonic pin
 const int trigPinr = 22;  // Trigger Pin Of Right Ultrasonic Sesnor
 const int echoPinr = 23;  // Echo Pin Of Right Ultrasonic Sesnor
+
 const int trigPinl = 24;  // Trigger Pin Of Lift Ultrasonic Sesnor
 const int echoPinl = 25;  // Echo Pin Of Lift Ultrasonic Sesnor
+
 const int trigPinf1 = 26; // Trigger Pin Of Lift Front Ultrasonic Sesnor
 const int echoPinf1 = 27; // Echo Pin Of Lift Front Ultrasonic Sesnor
+
 const int trigPinf2 = 28; // Trigger Pin OfFr ont Ultrasonic Sesnor
 const int echoPinf2 = 29; // Echo Pin Of Front Ultrasonic Sesnor
+
 const int trigPinf3 = 30; // Trigger Pin Of Right Front Ultrasonic Sesnor
 const int echoPinf3 = 31; // Echo Pin Of Right Right  Ultrasonic Sesnor
+
 const int trigPinb1 = 32; // Trigger Pin Of Right Back Ultrasonic Sesnor
 const int echoPinb1 = 34; // Echo Pin Of Right Back Ultrasonic Sesnor
+
 const int trigPinb2 = 35; // Trigger Pin Of Back Ultrasonic Sesnor
 const int echoPinb2 = 36; // Echo Pin Of Back Ultrasonic Sesnor
+
 const int trigPinb3 = 37; // Trigger Pin Of Lift Back Ultrasonic Sesnor
 const int echoPinb3 = 38; // Echo Pin Of Lift Back Ultrasonic Sesnor
 
 //UltraSonic variables
 long durationr; // variables to Calculate the distance
 float distancer;
+
 long durationl; // variables to Calculate the distance
 float distancel;
+
 long durationf1; // variables to Calculate the distance
 float distancef1;
+
 long durationf2; // variables to Calculate the distance
 float distancef2;
+
 long durationf3; // variables to Calculate the distance
 float distancef3;
+
 long durationb1; // variables to Calculate the distance
 float distanceb1;
+
 long durationb2; // variables to Calculate the distance
 float distanceb2;
+
 long durationb3; // variables to Calculate the distance
 float distanceb3;
 
@@ -56,18 +70,24 @@ void setup()
 
   pinMode(trigPinr, OUTPUT);
   pinMode(echoPinr, INPUT);
+
   pinMode(trigPinl, OUTPUT);
   pinMode(echoPinl, INPUT);
+
   pinMode(trigPinf1, OUTPUT);
   pinMode(echoPinf1, INPUT);
+
   pinMode(trigPinf2, OUTPUT);
   pinMode(echoPinf2, INPUT);
+
   pinMode(trigPinf3, OUTPUT);
   pinMode(echoPinf3, INPUT);
   pinMode(trigPinb1, OUTPUT);
+
   pinMode(echoPinb1, INPUT);
   pinMode(trigPinb2, OUTPUT);
   pinMode(echoPinb2, INPUT);
+
   pinMode(trigPinb3, OUTPUT);
   pinMode(echoPinb3, INPUT);
 
@@ -81,15 +101,7 @@ void setup()
   pinMode(LPWMmotor2, OUTPUT);
   pinMode(RPWMmotor2, OUTPUT);
 
-  pinMode(PWM1motor3, OUTPUT);
-  pinMode(PWM2motor3, OUTPUT);
-  pinMode(LPWMmotor3, OUTPUT);
-  pinMode(RPWMmotor3, OUTPUT);
-
-  pinMode(PWM1motor4, OUTPUT);
-  pinMode(PWM2motor4, OUTPUT);
-  pinMode(LPWMmotor4, OUTPUT);
-  pinMode(RPWMmotor4, OUTPUT);
+ 
 
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
@@ -98,33 +110,57 @@ void setup()
 void loop()
 {
   ultrar();
-  ultraf();
+  ultraf1();
+  ultraf2();
+  ultraf3();
   ultral();
+  ultrab1();
+  ultrab2();
+  ultrab3();
 
-  if (distancef < 20) // Sharp Back Turn if the distance is less than 50cm
+  if (distancef1 < 20 || distancef2 < 20 || distancef3 < 20  ) // Sharp Back Turn if the distance is less than 20cm
   {
 
     Serial.println("Stop");
     STOP();
     delay(500);
-    Serial.println("back");
-    BACK();
+    if (distanceb1 > 50 || distanceb2 > 50 || distanceb3 > 50)
+    {
+      Serial.println("back");
+      BACK();
+      delay(2000);
+      if ( distancef1 > 50 || distancef2 > 50 || distancef3 > 50 )
+      {
+        Serial.println("LEFT");
+        LEFT();
 
-    delay(3000);
-    Serial.println("LEFT");
-    LEFT();
+        delay(2000);
+      }
 
-    delay(2000);
+      else
+      {
+        STOP();
+        delay(500);
+      }
+
+    }
+    else
+    {
+      STOP();
+      delay(500);
+    }
+    delay(50);
   }
 
-  else if (distancef > 50) // Move Forward if distance is greater than 65cm
+  else if (distancef1 > 50 || distancef2 > 50 || distancef3 > 50) // Move Forward if distance is greater than 65cm
   {
 
     Serial.println("Forward");
     FORWORD();
+    delay(50);
   }
 
-  else if (distancef < 50) // Move back and turn if distance is less than 60cm
+  else if (distancef1 < 50 || distancef2 < 50 || distancef3 < 50) // Move back and turn if distance is less than 60cm
   {
     Serial.println("Object Detect");
 
@@ -150,7 +186,7 @@ void loop()
     }
   }
 
-  else if (distancel < 20 && distancef < 20 && distancer < 20) // Sharp Back Turn if the distance is less than 50cm
+  else if (distancel < 20 && distancef2 < 20 && distancer < 20) // Sharp Back Turn if the distance is less than 50cm
   {
 
     Serial.println("Stop");
@@ -172,6 +208,18 @@ void loop()
     digitalWrite(12, HIGH);
     delay(1500);
   }
+
+  else if (distancel < 20 && distancef2 < 20 && distancer < 20) // Sharp Back Turn if the distance is less than 50cm
+  {
+
+    Serial.println("Stop !!!");
+    STOP();
+    digitalWrite(10, HIGH);
+    digitalWrite(11, HIGH);
+    digitalWrite(12, HIGH);
+    delay(3000);
+    
+  }
 }
 
 void ultrar()
@@ -184,15 +232,37 @@ void ultrar()
   durationr = pulseIn(echoPinr, HIGH); // Calulating the timme taken by the ultrasonic wave to reflect back
   distancer = 0.034 * (durationr / 2); // Calulating the distance betweek thee robbot and the obstacle.
 }
-void ultraf()
+void ultraf1()
 {
-  digitalWrite(trigPinf, LOW); // Sending and Detecting the Ultrasonic Signal
+  digitalWrite(trigPinf1, LOW); // Sending and Detecting the Ultrasonic Signal
   delayMicroseconds(2);
-  digitalWrite(trigPinf, HIGH);
+  digitalWrite(trigPinf1, HIGH);
   delayMicroseconds(10);
-  digitalWrite(trigPinf, LOW);
-  durationf = pulseIn(echoPinf, HIGH); // Calulating the timme taken by the ultrasonic wave to reflectback
-  distancef = 0.034 * (durationf / 2); // Calulating the distance betweek thee robbot and the obstacle.
+  digitalWrite(trigPinf1, LOW);
+  durationf1 = pulseIn(echoPinf1, HIGH); // Calulating the timme taken by the ultrasonic wave to reflectback
+  distancef1 = 0.034 * (durationf1 / 2); // Calulating the distance betweek thee robbot and the obstacle.
+}
+
+void ultraf2()
+{
+  digitalWrite(trigPinf2, LOW); // Sending and Detecting the Ultrasonic Signal
+  delayMicroseconds(2);
+  digitalWrite(trigPinf2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPinf2, LOW);
+  durationf2 = pulseIn(echoPinf2, HIGH); // Calulating the timme taken by the ultrasonic wave to reflectback
+  distancef2 = 0.034 * (durationf2 / 2); // Calulating the distance betweek thee robbot and the obstacle.
+}
+
+void ultraf3()
+{
+  digitalWrite(trigPinf3, LOW); // Sending and Detecting the Ultrasonic Signal
+  delayMicroseconds(2);
+  digitalWrite(trigPinf3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPinf3, LOW);
+  durationf3 = pulseIn(echoPinf3, HIGH); // Calulating the timme taken by the ultrasonic wave to reflectback
+  distancef3 = 0.034 * (durationf3 / 2); // Calulating the distance betweek thee robbot and the obstacle.
 }
 void ultral()
 {
@@ -203,6 +273,39 @@ void ultral()
   digitalWrite(trigPinl, LOW);
   durationl = pulseIn(echoPinl, HIGH); // Calulating the timme taken by the ultrasonic wave to reflect back
   distancel = 0.034 * (durationl / 2); // Calulating the distance betweek thee robbot and the obstacle.
+}
+
+void ultrab1()
+{
+  digitalWrite(trigPinb1, LOW); // Sending and Detecting the Ultrasonic Signal
+  delayMicroseconds(2);
+  digitalWrite(trigPinb1, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPinb1, LOW);
+  durationb1 = pulseIn(echoPinb1, HIGH); // Calulating the timme taken by the ultrasonic wave to reflectback
+  distanceb1 = 0.034 * (durationb1 / 2); // Calulating the distance betweek thee robbot and the obstacle.
+}
+
+void ultrab2()
+{
+  digitalWrite(trigPinb2, LOW); // Sending and Detecting the Ultrasonic Signal
+  delayMicroseconds(2);
+  digitalWrite(trigPinb2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPinb2, LOW);
+  durationb2 = pulseIn(echoPinb2, HIGH); // Calulating the timme taken by the ultrasonic wave to reflectback
+  distanceb2 = 0.034 * (durationb2 / 2); // Calulating the distance betweek thee robbot and the obstacle.
+}
+
+void ultrab3()
+{
+  digitalWrite(trigPinb3, LOW); // Sending and Detecting the Ultrasonic Signal
+  delayMicroseconds(2);
+  digitalWrite(trigPinb3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPinb3, LOW);
+  durationb3 = pulseIn(echoPinb3, HIGH); // Calulating the timme taken by the ultrasonic wave to reflectback
+  distanceb3 = 0.034 * (durationb3 / 2); // Calulating the distance betweek thee robbot and the obstacle.
 }
 
 void FORWORD()
@@ -218,15 +321,7 @@ void FORWORD()
   digitalWrite(LPWMmotor2, HIGH);
   digitalWrite(RPWMmotor2, LOW);
 
-  analogWrite(PWM1motor3, 200);
-  analogWrite(PWM2motor3, 200);
-  digitalWrite(LPWMmotor3, HIGH);
-  digitalWrite(RPWMmotor3, LOW);
 
-  analogWrite(PWM1motor4, 200);
-  analogWrite(PWM2motor4, 200);
-  digitalWrite(LPWMmotor4, HIGH);
-  digitalWrite(RPWMmotor4, LOW);
 }
 
 void BACK()
@@ -242,15 +337,7 @@ void BACK()
   digitalWrite(LPWMmotor2, LOW);
   digitalWrite(RPWMmotor2, HIGH);
 
-  analogWrite(PWM1motor3, 200);
-  analogWrite(PWM2motor3, 200);
-  digitalWrite(LPWMmotor3, LOW);
-  digitalWrite(RPWMmotor3, HIGH);
-
-  analogWrite(PWM1motor4, 200);
-  analogWrite(PWM2motor4, 200);
-  digitalWrite(LPWMmotor4, LOW);
-  digitalWrite(RPWMmotor4, HIGH);
+  
 }
 
 void RIGHT()
@@ -266,15 +353,7 @@ void RIGHT()
   digitalWrite(LPWMmotor2, LOW);
   digitalWrite(RPWMmotor2, LOW);
 
-  analogWrite(PWM1motor3, 200);
-  analogWrite(PWM2motor3, 200);
-  digitalWrite(LPWMmotor3, HIGH);
-  digitalWrite(RPWMmotor3, LOW);
 
-  analogWrite(PWM1motor4, 0);
-  analogWrite(PWM2motor4, 0);
-  digitalWrite(LPWMmotor4, LOW);
-  digitalWrite(RPWMmotor4, LOW);
 }
 
 void LEFT()
@@ -290,16 +369,7 @@ void LEFT()
   digitalWrite(LPWMmotor2, HIGH);
   digitalWrite(RPWMmotor2, LOW);
 
-  analogWrite(PWM1motor3, 0);
-  analogWrite(PWM2motor3, 0);
-  digitalWrite(LPWMmotor3, LOW);
-  digitalWrite(RPWMmotor3, LOW);
 
-  analogWrite(PWM1motor4, 200);
-  analogWrite(PWM2motor4, 200);
-  digitalWrite(LPWMmotor4, HIGH);
-  digitalWrite(RPWMmotor4, LOW);
-}
 
 void STOP()
 {
@@ -314,13 +384,5 @@ void STOP()
   digitalWrite(LPWMmotor2, LOW);
   digitalWrite(RPWMmotor2, LOW);
 
-  analogWrite(PWM1motor3, 0);
-  analogWrite(PWM2motor3, 0);
-  digitalWrite(LPWMmotor3, LOW);
-  digitalWrite(RPWMmotor3, LOW);
 
-  analogWrite(PWM1motor4, 0);
-  analogWrite(PWM2motor4, 0);
-  digitalWrite(LPWMmotor4, LOW);
-  digitalWrite(RPWMmotor4, LOW);
 }
