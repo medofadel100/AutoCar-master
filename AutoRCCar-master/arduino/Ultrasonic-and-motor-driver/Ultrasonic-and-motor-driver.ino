@@ -120,10 +120,11 @@ void loop()
 
   if (distancef1 < 20 || distancef2 < 20 || distancef3 < 20  ) // Sharp Back Turn if the distance is less than 20cm
   {
-
+    Serial.println("Close Object Detect in Front");
     Serial.println("Stop");
     STOP();
     delay(500);
+    
     if (distanceb1 > 50 || distanceb2 > 50 || distanceb3 > 50)
     {
       Serial.println("back");
@@ -152,7 +153,7 @@ void loop()
     delay(50);
   }
 
-  else if (distancef1 > 50 || distancef2 > 50 || distancef3 > 50) // Move Forward if distance is greater than 65cm
+  else if (distancef1 > 50 || distancef2 > 50 || distancef3 > 50) // Move Forward if distance is greater than 50cm
   {
 
     Serial.println("Forward");
@@ -160,9 +161,9 @@ void loop()
     delay(50);
   }
 
-  else if (distancef1 < 50 || distancef2 < 50 || distancef3 < 50) // Move back and turn if distance is less than 60cm
+  else if (distancef1 < 50 || distancef2 < 50 || distancef3 < 50) // Move back and turn if distance is less than 50cm
   {
-    Serial.println("Object Detect");
+    Serial.println("Object Detect in Front");
 
     if (distancel < 30) // Sharp Right Turn if the distance is less than 50cm
     {
@@ -188,7 +189,7 @@ void loop()
 
   else if (distancel < 20 && distancef2 < 20 && distancer < 20) // Sharp Back Turn if the distance is less than 50cm
   {
-
+    Serial.println("Object Detect in Forward & Right& Left"); 
     Serial.println("Stop");
     STOP();
     digitalWrite(10, HIGH);
