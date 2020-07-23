@@ -1,4 +1,4 @@
-__author__ = 'Ahmed Fadel'
+#__author__ = 'Ahmed Fadel'
 
 from model import load_data, NeuralNetwork
 

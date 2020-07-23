@@ -1,4 +1,4 @@
-__author__ = 'Ahmed Fadel'
+#__author__ = 'Ahmed Fadel'
 
 import serial
 import pygame
@@ -10,8 +10,9 @@ class RCTest(object):
     def __init__(self):
         pygame.init()
         pygame.display.set_mode((250, 250))
-        self.ser = serial.Serial("/dev/tty.usbmodem1421", 115200, timeout=1)    # mac
+        #self.ser = serial.Serial("/dev/tty.usbmodem1421", 115200, timeout=1)    # mac
         # self.ser = serial.Serial("/dev/ttyACM0", 115200, timeout=1)           # linux
+        self.ser = serial.Serial('COM8', 115200, timeout=1)                     #windows
         self.send_inst = True
         self.steer()
 

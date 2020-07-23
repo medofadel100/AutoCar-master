@@ -1,4 +1,4 @@
-__author__ = 'Ahmed Fadel'
+#__author__ = 'Ahmed Fadel'
 
 import cv2
 import sys

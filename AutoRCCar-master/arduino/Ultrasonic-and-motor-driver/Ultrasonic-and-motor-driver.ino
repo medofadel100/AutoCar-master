@@ -1,4 +1,4 @@
-// update on vs code terminal
+// update on vs code no terminal
 
 // motor Driver 1
 int PWM1motor1 = 2;
@@ -171,46 +171,60 @@ void loop()
       Serial.println("Right");
       RIGHT();
       delay(1000);
+
     }
 
-    else if (distancer < 30) // Sharp Left Turn if the distance is less than 50cm
+    else if (distancer < 30) // Sharp Left Turn if the distance is less than 30cm
     {
 
       Serial.println("left");
       LEFT();
       delay(1000);
+
     }
     else
     {
+
       RIGHT();
       delay(1000);
+
     }
   }
 
-  else if (distancel < 20 && distancef2 < 20 && distancer < 20) // Sharp Back Turn if the distance is less than 50cm
+  else if (distancel < 20 && distancef2 < 20 && distancer < 20) // Sharp Back Turn if the distance is less than 20cm
   {
-    Serial.println("Object Detect in Forward & Right& Left"); 
+    Serial.println("Object Detect in Forward & Right & Left"); 
     Serial.println("Stop");
     STOP();
+
     digitalWrite(10, HIGH);
     digitalWrite(11, HIGH);
     digitalWrite(12, HIGH);
     delay(500);
+
     Serial.println("back");
     BACK();
     digitalWrite(10, HIGH);
     digitalWrite(11, LOW);
     digitalWrite(12, HIGH);
     delay(2000);
-    Serial.println("Right");
-    RIGHT();
-    digitalWrite(10, LOW);
-    digitalWrite(11, LOW);
-    digitalWrite(12, HIGH);
-    delay(1500);
+    if (distancel <  distancer )
+    {
+      Serial.println("Right");
+      RIGHT();
+      digitalWrite(10, LOW);
+      digitalWrite(11, LOW);
+      digitalWrite(12, HIGH);
+      delay(1500);
+    }
+    if (distancel >  distancer)
+    {
+      Serial.println("Left");
+      LEFT();
+    }
   }
 
-  else if (distancel < 20 && distancef2 < 20 && distancer < 20) // Sharp Back Turn if the distance is less than 50cm
+  else if (distancel < 20 && distancef2 < 20 && distancer < 20 && distanceb2 < 20) // Sharp Back Turn if the distance is less than 50cm
   {
 
     Serial.println("Stop !!!");
