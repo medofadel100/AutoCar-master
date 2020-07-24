@@ -2,7 +2,8 @@
 
 import numpy as np
 import cv2
-import serial
+#import serial
+from firebase import firebase
 import pygame
 from pygame.locals import *
 import socket
@@ -12,7 +13,7 @@ import os
 
 class CollectTrainingData(object):
     
-    def __init__(self, host, port, serial_port, input_size):
+    def __init__(self, host, port, firebase_address, input_size):
 
         self.server_socket = socket.socket()
         self.server_socket.bind((host, port))
@@ -21,8 +22,8 @@ class CollectTrainingData(object):
         # accept a single connection
         self.connection = self.server_socket.accept()[0].makefile('rb')
 
-        # connect to a seral port
-        self.ser = serial.Serial(serial_port, 115200, timeout=1)
+        # connect to a seral port / firebase address
+        self.addr = firebase.FirebaseApplication(firebase_address, None)
         self.send_inst = True
 
         self.input_size = input_size
@@ -85,22 +86,22 @@ class CollectTrainingData(object):
                                 X = np.vstack((X, temp_array))
                                 y = np.vstack((y, self.k[1]))
                                 saved_frame += 1
-                                self.ser.write(chr(6).encode())
+                                self.addr.put('/self-drive-car', 'control', '9')
 
                             elif key_input[pygame.K_UP] and key_input[pygame.K_LEFT]:
                                 print("Forward Left")
                                 X = np.vstack((X, temp_array))
                                 y = np.vstack((y, self.k[0]))
                                 saved_frame += 1
-                                self.ser.write(chr(7).encode())
+                                self.addr.put('/self-drive-car', 'control', '7')
 
                             elif key_input[pygame.K_DOWN] and key_input[pygame.K_RIGHT]:
                                 print("Reverse Right")
-                                self.ser.write(chr(8).encode())
+                                self.addr.put('/self-drive-car', 'control', '3')
 
                             elif key_input[pygame.K_DOWN] and key_input[pygame.K_LEFT]:
                                 print("Reverse Left")
-                                self.ser.write(chr(9).encode())
+                                self.addr.put('/self-drive-car', 'control', '1')
 
                             # simple orders
                             elif key_input[pygame.K_UP]:
@@ -108,35 +109,34 @@ class CollectTrainingData(object):
                                 saved_frame += 1
                                 X = np.vstack((X, temp_array))
                                 y = np.vstack((y, self.k[2]))
-                                self.ser.write(chr(1).encode())
+                                self.addr.put('/self-drive-car', 'control', '8')
 
                             elif key_input[pygame.K_DOWN]:
                                 print("Reverse")
-                                self.ser.write(chr(2).encode())
+                                self.addr.put('/self-drive-car', 'control', '2')
 
                             elif key_input[pygame.K_RIGHT]:
                                 print("Right")
                                 X = np.vstack((X, temp_array))
                                 y = np.vstack((y, self.k[1]))
                                 saved_frame += 1
-                                self.ser.write(chr(3).encode())
+                                self.addr.put('/self-drive-car', 'control', '6')
 
                             elif key_input[pygame.K_LEFT]:
                                 print("Left")
                                 X = np.vstack((X, temp_array))
                                 y = np.vstack((y, self.k[0]))
                                 saved_frame += 1
-                                self.ser.write(chr(4).encode())
+                                self.addr.put('/self-drive-car', 'control', '4')
 
                             elif key_input[pygame.K_x] or key_input[pygame.K_q]:
                                 print("exit")
                                 self.send_inst = False
-                                self.ser.write(chr(0).encode())
-                                self.ser.close()
+                                self.addr.put('/self-drive-car', 'control', '0')
                                 break
 
                         elif event.type == pygame.KEYUP:
-                            self.ser.write(chr(0).encode())
+                            self.addr.put('/self-drive-car', 'control', '0')
 
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
@@ -168,10 +168,10 @@ class CollectTrainingData(object):
 
 if __name__ == '__main__':
     # host, port
-    h, p = "192.168.1.100", 8000
+    h, p = "192.168.1.4", 8000
 
     # serial port
-    sp = "/dev/tty.usbmodem1421"
+    sp = "https://self-drive-car.firebaseio.com/"
 
     # vector size, half of the image
     s = 120 * 320

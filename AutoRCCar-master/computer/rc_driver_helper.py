@@ -1,5 +1,5 @@
 #__author__ = 'Ahmed Fadel'
-import serial
+#import serial
 import cv2
 import math
 from firebase import firebase
@@ -8,34 +8,26 @@ from firebase import firebase
 
 class RCControl(object):
     def __init__(self, address):
-        self.address = firebase.FirebaseApplication("https://self-drive-car.firebaseio.com/", None)
-        read_serial=ser.readline()
+        self.address = firebase.FirebaseApplication(address, None)
 
-  """  def steer(self, prediction):
+    def steer(self, prediction):
         if prediction == 2:
            self.address.put('/self-drive-car', 'control', '8')
             print("Forward")
-            ser.write(b'Forward')
-            ser.close() 
+ 
         elif prediction == 0:
-            self.address.put('/self-drive-car', 'control', '24')
+            self.address.put('/self-drive-car', 'control', '4')
             print("Left")
-            ser.write(b'Left')
-            ser.close() 
+
         elif prediction == 1:
             self.address.put('/self-drive-car', 'control', '6')
             print("Right")
-            ser.write(b'Right')
-            ser.close() 
+
         else:
             self.stop()
-            ser.write(b'Stop')
-            ser.close() 
 
     def stop(self):
         self.address.put('/self-drive-car', 'control', '2')
-        ser.write(b'Back')
-        ser.close() 
 
 """
     while self.send_inst:
@@ -46,13 +38,11 @@ class RCControl(object):
                     # complex orders
                     if key_input[pygame.K_UP] and key_input[pygame.K_RIGHT]:
                         print("Forward Right")
-                        ser.write(b'Forward Right')
-                        ser.close()
+                        self.address.put('/self-drive-car', 'control', '9')
 
                     elif key_input[pygame.K_UP] and key_input[pygame.K_LEFT]:
                         print("Forward Left")
-                        ser.write(b'Forward Left')
-                        ser.close()
+                        self.address.put('/self-drive-car', 'control', '9')
 
                     elif key_input[pygame.K_DOWN] and key_input[pygame.K_RIGHT]:
                         print("Reverse Right")
@@ -110,7 +100,7 @@ class RCControl(object):
 
                 elif event.type == pygame.KEYUP:
                     self.ser.write(chr(0).encode())
-
+"""
 
 class DistanceToCamera(object):
 
