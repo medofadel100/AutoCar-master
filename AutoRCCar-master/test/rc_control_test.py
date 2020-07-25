@@ -51,6 +51,7 @@ class RCTest(object):
                     elif key_input[pygame.K_x] or key_input[pygame.K_q]:
                         print("Exit")
                         self.send_inst = False
+                        self.fb_address.put('/self-drive-car', 'control', 'q')
                         break
 
                 # elif event.type == pygame.KEYUP:

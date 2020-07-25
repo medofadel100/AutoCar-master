@@ -27,7 +27,7 @@ class RCControl(object):
             self.stop()
 
     def stop(self):
-        self.address.put('/self-drive-car', 'control', '2')
+        self.address.put('/self-drive-car', 'control', '0')
 
 """
     while self.send_inst:
