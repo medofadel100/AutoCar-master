@@ -2,7 +2,7 @@
 import cv2
 import sys
 import threading
-import socketserver
+import socket
 import numpy as np
 
 
@@ -11,6 +11,13 @@ from driver_helper_test import *
 
 class VideoStreamHandler(object):
     def __init__(self, host, port1, port2):
+        self.server_socket = socket.socket()
+        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server_socket.bind((host, port1))
+        self.server_socket.listen(0)
+        self.connection, self.client_address = self.server_socket.accept()
+        self.host_name = socket.gethostname()
+        self.host_ip = socket.gethostbyname(self.host_name)
     # h1: stop sign, measured manually
     # h2: traffic light, measured manually
     h1 = 5.5  # cm
@@ -21,7 +28,7 @@ class VideoStreamHandler(object):
     nn.load_model("saved_model/nn_model.xml")
     
     obj_detection = ObjectDetection()
-    rc_car = RCControl(host, port1) 
+    rc_car = RCControl(host, port2) 
 
     # cascade classifiers
     stop_cascade = cv2.CascadeClassifier("cascade_xml/stop_sign.xml")
@@ -49,7 +56,7 @@ class VideoStreamHandler(object):
         try:
             # stream video frames one by one
             while True:
-                stream_bytes += self.rfile.read(1024)
+                stream_bytes += self.connection.read(1024)
                 first = stream_bytes.find(b'\xff\xd8')
                 last = stream_bytes.find(b'\xff\xd9')
                 if first != -1 and last != -1:
@@ -145,5 +152,5 @@ class VideoStreamHandler(object):
 if __name__ == '__main__':
     video_thread = threading.Thread(target=VideoStreamHandler, args=('192.168.1.24', 8000, 8004))
     video_thread.start()
-    distance_thread = threading.Thread(target=ControlStreamingTest, args=('192.168.1.24', 8002))
+    distance_thread = threading.Thread(target=SensorStreamingTest, args=('192.168.1.24', 8002))
     distance_thread.start()
