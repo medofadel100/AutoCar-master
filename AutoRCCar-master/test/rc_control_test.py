@@ -54,9 +54,9 @@ class RCTest(object):
                         self.fb_address.put('/self-drive-car', 'control', 'q')
                         break
 
-                # elif event.type == pygame.KEYUP:
-                #     print("Stop")
-                #     self.fb_address.put('/self-drive-car', 'control', '0')
+                elif event.type == pygame.KEYUP:
+                    print("Stop")
+                    self.fb_address.put('/self-drive-car', 'control', '0')
 
 
 if __name__ == '__main__':

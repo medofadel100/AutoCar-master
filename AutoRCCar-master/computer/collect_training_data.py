@@ -81,30 +81,30 @@ class CollectTrainingData(object):
                             key_input = pygame.key.get_pressed()
 
                             # complex orders
-                            if key_input[pygame.K_UP] and key_input[pygame.K_RIGHT]:
-                                print("Forward Right")
-                                X = np.vstack((X, temp_array))
-                                y = np.vstack((y, self.k[1]))
-                                saved_frame += 1
-                                self.addr.put('/self-drive-car', 'control', '9')
+                            # if key_input[pygame.K_UP] and key_input[pygame.K_RIGHT]:
+                            #     print("Forward Right")
+                            #     X = np.vstack((X, temp_array))
+                            #     y = np.vstack((y, self.k[1]))
+                            #     saved_frame += 1
+                            #     self.addr.put('/self-drive-car', 'control', '9')
 
-                            elif key_input[pygame.K_UP] and key_input[pygame.K_LEFT]:
-                                print("Forward Left")
-                                X = np.vstack((X, temp_array))
-                                y = np.vstack((y, self.k[0]))
-                                saved_frame += 1
-                                self.addr.put('/self-drive-car', 'control', '7')
+                            # elif key_input[pygame.K_UP] and key_input[pygame.K_LEFT]:
+                            #     print("Forward Left")
+                            #     X = np.vstack((X, temp_array))
+                            #     y = np.vstack((y, self.k[0]))
+                            #     saved_frame += 1
+                            #     self.addr.put('/self-drive-car', 'control', '7')
 
-                            elif key_input[pygame.K_DOWN] and key_input[pygame.K_RIGHT]:
-                                print("Reverse Right")
-                                self.addr.put('/self-drive-car', 'control', '3')
+                            # elif key_input[pygame.K_DOWN] and key_input[pygame.K_RIGHT]:
+                            #     print("Reverse Right")
+                            #     self.addr.put('/self-drive-car', 'control', '3')
 
-                            elif key_input[pygame.K_DOWN] and key_input[pygame.K_LEFT]:
-                                print("Reverse Left")
-                                self.addr.put('/self-drive-car', 'control', '1')
+                            # elif key_input[pygame.K_DOWN] and key_input[pygame.K_LEFT]:
+                            #     print("Reverse Left")
+                            #     self.addr.put('/self-drive-car', 'control', '1')
 
                             # simple orders
-                            elif key_input[pygame.K_UP]:
+                            if key_input[pygame.K_UP]:
                                 print("Forward")
                                 saved_frame += 1
                                 X = np.vstack((X, temp_array))
@@ -117,16 +117,16 @@ class CollectTrainingData(object):
 
                             elif key_input[pygame.K_RIGHT]:
                                 print("Right")
+                                saved_frame += 1
                                 X = np.vstack((X, temp_array))
                                 y = np.vstack((y, self.k[1]))
-                                saved_frame += 1
                                 self.addr.put('/self-drive-car', 'control', '6')
 
                             elif key_input[pygame.K_LEFT]:
                                 print("Left")
+                                saved_frame += 1
                                 X = np.vstack((X, temp_array))
                                 y = np.vstack((y, self.k[0]))
-                                saved_frame += 1
                                 self.addr.put('/self-drive-car', 'control', '4')
 
                             elif key_input[pygame.K_x] or key_input[pygame.K_q]:
@@ -168,7 +168,7 @@ class CollectTrainingData(object):
 
 if __name__ == '__main__':
     # host, port
-    h, p = "192.168.1.4", 8000
+    h, p = "192.168.1.24", 8002
 
     # serial port
     sp = "https://self-drive-car.firebaseio.com/"

@@ -27,7 +27,7 @@ class SplitFrames(object):
                 self.stream.seek(0)
         self.stream.write(buf)
 
-my_server = '192.168.1.100'
+my_server = '192.168.1.24'
 res = (320, 240)
 client_socket = socket.socket()
 client_socket.connect((my_server, 8000))
