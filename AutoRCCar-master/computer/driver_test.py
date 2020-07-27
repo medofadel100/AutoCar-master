@@ -38,8 +38,7 @@ class VideoStreamHandler(object):
     light_cascade = cv2.CascadeClassifier("cascade_xml/traffic_light.xml")
 
     d_to_camera = DistanceToCamera()
-    # hard coded thresholds for stopping, sensor 30cm, other two 25cm
-    d_sensor_thresh = 30
+    # hard coded thresholds for stopping, other two 25cm
     d_stop_light_thresh = 25
     d_stop_sign = d_stop_light_thresh
     d_light = d_stop_light_thresh
@@ -51,7 +50,6 @@ class VideoStreamHandler(object):
 
     def handle(self):
 
-        global sensor_data
         stream_bytes = b' '
         stop_flag = False
         stop_sign_active = True
@@ -93,12 +91,8 @@ class VideoStreamHandler(object):
                     prediction = self.nn.predict(image_array)
 
                     # stop conditions
-                    if sensor_data and int(sensor_data) < self.d_sensor_thresh:
-                        print("Stop, obstacle in front")
-                        self.rc_car.stop()
-                        sensor_data = None
 
-                    elif 0 < self.d_stop_sign < self.d_stop_light_thresh and stop_sign_active:
+                    if 0 < self.d_stop_sign < self.d_stop_light_thresh and stop_sign_active:
                         print("Stop sign ahead")
                         self.rc_car.stop()
 
