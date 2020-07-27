@@ -114,7 +114,7 @@ class VideoStreamingTest(object):
 
 
 if __name__ == '__main__':
-    distance_thread = threading.Thread(target=VideoStreamingTest, args=('192.168.1.24', 8004))
+    distance_thread = threading.Thread(target=VideoStreamingTest, args=('192.168.1.24', 8000))
     distance_thread.start()
-    video_thread = threading.Thread(target=ControlStreamingTest, args=('192.168.1.24', 8002))
+    video_thread = threading.Thread(target=ControlStreamingTest, args=('192.168.1.24', 8004))
     video_thread.start()

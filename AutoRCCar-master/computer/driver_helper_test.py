@@ -1,5 +1,6 @@
 import cv2
 import math
+import socket
 
 class RCControl(object):
     def __init__(self, host, port):
@@ -13,7 +14,7 @@ class RCControl(object):
 
     def steer(self, prediction):
         if prediction == 2:
-           self.connection.send(str('8').encode('ascii'))
+            self.connection.send(str('8').encode('ascii'))
             print("Forward")
  
         elif prediction == 0:

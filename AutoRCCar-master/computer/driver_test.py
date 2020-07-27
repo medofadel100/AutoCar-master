@@ -18,6 +18,8 @@ class VideoStreamHandler(object):
         self.connection, self.client_address = self.server_socket.accept()
         self.host_name = socket.gethostname()
         self.host_ip = socket.gethostbyname(self.host_name)
+
+        self.rc_car = RCControl(host, port2)
     # h1: stop sign, measured manually
     # h2: traffic light, measured manually
     h1 = 5.5  # cm
@@ -26,9 +28,10 @@ class VideoStreamHandler(object):
     # load trained neural network
     nn = NeuralNetwork()
     nn.load_model("saved_model/nn_model.xml")
+    print(nn)
     
     obj_detection = ObjectDetection()
-    rc_car = RCControl(host, port2) 
+     
 
     # cascade classifiers
     stop_cascade = cv2.CascadeClassifier("cascade_xml/stop_sign.xml")
@@ -152,5 +155,5 @@ class VideoStreamHandler(object):
 if __name__ == '__main__':
     video_thread = threading.Thread(target=VideoStreamHandler, args=('192.168.1.24', 8000, 8004))
     video_thread.start()
-    distance_thread = threading.Thread(target=SensorStreamingTest, args=('192.168.1.24', 8002))
-    distance_thread.start()
+    # distance_thread = threading.Thread(target=SensorStreamingTest, args=('192.168.1.24', 8002))
+    # distance_thread.start()
