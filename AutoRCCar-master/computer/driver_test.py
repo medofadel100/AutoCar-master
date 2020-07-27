@@ -12,10 +12,10 @@ from driver_helper_test import *
 class VideoStreamHandler(object):
     def __init__(self, host, port1, port2):
         self.server_socket = socket.socket()
-        self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server_socket.bind((host, port1))
         self.server_socket.listen(0)
         self.connection, self.client_address = self.server_socket.accept()
+        self.connection = self.connection.makefile('rb')
         self.host_name = socket.gethostname()
         self.host_ip = socket.gethostbyname(self.host_name)
 
